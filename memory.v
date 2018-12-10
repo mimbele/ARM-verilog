@@ -6,7 +6,7 @@ module memory(clk, address, data_in, read, write, data_out);
 	input write;
 	output [63:0] data_out;
 
-	reg [63:0] memory [127:0];
+	reg [63:0] memory [0:127];
 	
 	assign data_out = read ? memory[address] : 64'bz;
 	
