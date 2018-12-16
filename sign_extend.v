@@ -1,8 +1,12 @@
-module sign_extend(A, Out);
-	parameter n=32;
-	parameter m=64;
-	input [n-1:0] A;
-	output [m-1:0] Out;
-	
-	assign Out = A[n-1] ? { {(m-n){1'b1}}, A} : { {(m-n){1'b0}}, A};
+module sign_extend(Instruction, Out);
+	input [31:0] Instruction;
+	output [63:0] Out;
+
+	wire [1:0]A;
+
+	assign A = Instruction[31:30];
+
+	wire Sign;
+	assign Sign = A[1] ? (A[0] ? (Instruction[20]) : (Instruction[23])) : (A[0] ? 0 : (Instruction[25]));
+	assign Out = A[1] ? (A[0] ? ({{55{Sign}}, Instruction[20:12]}) : ({{45{Sign}}, Instruction[23:5]})) : (A[0] ? (64'b0) : ({{38{Sign}}, Instruction[25:0]}));
 endmodule
