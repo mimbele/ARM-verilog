@@ -15,6 +15,8 @@ module control_unit(Operation, Reg2Loc, ALUSrc, MemtoReg, RegWrite, MemRead, Mem
 
 	always @(Operation)begin
 		casex(Operation)
+			11'b00000000000: cu_output <= 9'b000000000;
+		
 			11'b1xx0101x000: cu_output <= 9'b000100010;
 			
 			11'b11111000010: cu_output <= 9'b011110000;
