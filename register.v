@@ -1,13 +1,14 @@
 module register(clk, new_pc, w, rst, old_pc);
+	parameter n=64;
 	input clk;
-	input [63:0]new_pc;
+	input [n-1:0]new_pc;
 	input w;
 	input rst;
-	output reg [63:0]old_pc;
+	output reg [n-1:0]old_pc;
 	
 	always @(posedge clk)begin
 		if(rst==1'b1)begin
-			old_pc <= 64'b0;
+			old_pc <= {(n-1){1'b0}};
 		end else begin
 			if(w==1'b1)begin
 				old_pc <= new_pc;
