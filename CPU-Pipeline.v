@@ -1,6 +1,6 @@
 `default_nettype none
 
-module CPU;
+module CPU_Pipeline;
 	wire clk;
 	reg register_reset, register_write;
 	wire [63:0] new_PC;
