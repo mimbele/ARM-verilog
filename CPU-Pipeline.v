@@ -24,10 +24,9 @@ module CPU_Pipeline;
 
 	//EX Stage Wires
 	wire [1:0] EX_ALUOperation;
-	wire EX_Reg2Loc, EX_ALUSrc, EX_MemToReg, EX_RegWrite, EX_MemRead, EX_MemWrite, EX_Branch, EX_ALUZero;
-	wire [4:0] EX_instruction_4_0, EX_read_register_2;
+	wire EX_ALUSrc, EX_MemToReg, EX_RegWrite, EX_MemRead, EX_MemWrite, EX_Branch, EX_ALUZero;
+	wire [4:0] EX_instruction_4_0;
 	wire [10:0] EX_instruction_31_21;
-	wire [31:0] EX_instruction;
 	wire [63:0] EX_PC, EX_ALUResult, EX_JumpAddress, EX_read_data_1, EX_read_data_2, EX_ExtendedData;
 	
 	
@@ -51,7 +50,6 @@ module CPU_Pipeline;
 		register_write = 1;
 	end
 	
-	//assign read_register_1 = instruction[9:5];
 
 	//Clock
 	clock OSC(clk);
@@ -70,7 +68,7 @@ module CPU_Pipeline;
 	register PC(clk, new_PC, register_write, register_reset, IF_PC);
 
 	//Instruction Memory
-	instruction_memory inst_mem(IF_PC, IF_instruction);
+	pipeline_instruction_memory inst_mem(IF_PC, IF_instruction);
 
 	//PC + 4
 	adder add4(.A(IF_PC), .B(64'b100), .Cin(1'b0), .S(PCPlus4));
@@ -98,8 +96,8 @@ module CPU_Pipeline;
 	
 	
 	
-	register  #(96) ID_EX (clk, {ID_ALUSrc, ID_MemToReg, ID_RegWrite, ID_MemRead, ID_MemWrite, ID_Branch, ID_ALUOperation, ID_PC, ID_read_data_1, ID_read_data_2, ID_ExtendedData, ID_instruction[31:21], ID_instruction[4:0]}, register_write, register_reset,
-							   {EX_ALUSrc, EX_MemToReg, EX_RegWrite, EX_MemRead, EX_MemWrite, EX_Branch, EX_ALUOperation, EX_PC, EX_read_data_1, EX_read_data_2, EX_ExtendedData, EX_instruction_31_21,  EX_instruction_4_0});
+	register  #(280) ID_EX (clk, {ID_ALUSrc, ID_MemToReg, ID_RegWrite, ID_MemRead, ID_MemWrite, ID_Branch, ID_ALUOperation, ID_PC, ID_read_data_1, ID_read_data_2, ID_ExtendedData, ID_instruction[31:21], ID_instruction[4:0]}, register_write, register_reset,
+							    {EX_ALUSrc, EX_MemToReg, EX_RegWrite, EX_MemRead, EX_MemWrite, EX_Branch, EX_ALUOperation, EX_PC, EX_read_data_1, EX_read_data_2, EX_ExtendedData, EX_instruction_31_21,  EX_instruction_4_0});
 
 	
 	
@@ -124,7 +122,7 @@ module CPU_Pipeline;
 		
 		
 		
-	register  #(96) EX_MEM (clk, {EX_MemToReg,  EX_RegWrite,  EX_MemRead,  EX_MemWrite,  EX_Branch,  EX_JumpAddress,  EX_ALUZero,  EX_ALUResult,  EX_read_data_2,  EX_instruction_4_0}, register_write, register_reset,
+	register  #(203) EX_MEM (clk, {EX_MemToReg,  EX_RegWrite,  EX_MemRead,  EX_MemWrite,  EX_Branch,  EX_JumpAddress,  EX_ALUZero,  EX_ALUResult,  EX_read_data_2,  EX_instruction_4_0}, register_write, register_reset,
 								 {MEM_MemToReg, MEM_RegWrite, MEM_MemRead, MEM_MemWrite, MEM_Branch, MEM_JumpAddress, MEM_ALUZero, MEM_ALUResult, MEM_read_data_2, MEM_instruction_4_0});
 
 							   
@@ -136,7 +134,7 @@ module CPU_Pipeline;
 	memory DataMemory(clk, MEM_ALUResult, MEM_read_data_2, MEM_MemRead, MEM_MemWrite, MEM_MemDataOut);
 	
 	
-	register  #(96) MEM_WB (clk, {MEM_MemToReg, MEM_RegWrite, MEM_MemDataOut, MEM_ALUResult, MEM_instruction_4_0}, register_write, register_reset,
+	register  #(135) MEM_WB (clk, {MEM_MemToReg, MEM_RegWrite, MEM_MemDataOut, MEM_ALUResult, MEM_instruction_4_0}, register_write, register_reset,
 								 {WB_MemToReg,  WB_RegWrite,  WB_MemDataOut, WB_ALUResult,  WB_instruction_4_0});
 
 	
