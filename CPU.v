@@ -1,16 +1,18 @@
+`default_nettype none
+
 module CPU;
 	wire clk;
-	wire pc_reset, pc_write;
+	reg pc_reset, pc_write;
 	wire [63:0] new_pc;
 	wire [63:0] old_pc;
 	wire [31:0] instruction;
 	wire [63:0] PCPlus4;
-	wire Reg2Loc, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch;
+	wire Reg2Loc, ALUSrc, MemToReg, RegWrite, MemRead, MemWrite, Branch;
 	wire [1:0] ALUOperation;
 	wire [63:0] read_data_1;
 	wire [63:0] read_data_2;
 	wire [63:0] ExtendedData;
-	wire [4:0] ALUFunc;
+	wire [3:0] ALUFunc;
 	wire [63:0] ALUResult;
 	wire ALUZero;
 	wire [63:0] ALUSrcMuxOutput;
@@ -18,6 +20,16 @@ module CPU;
 	wire [63:0] JumpAddress;
 	wire [63:0] MemDataOut;
 	wire [63:0] MemtoRegMuxOutput;
+	//wire [4:0] read_register_1;
+	wire [4:0] read_register_2;
+	
+	initial begin
+		pc_reset = 1;
+		#210 pc_reset = 0;
+		pc_write = 1;
+	end
+	
+	//assign read_register_1 = instruction[9:5];
 
 	//Clock
 	clock OSC(clk);
@@ -32,13 +44,13 @@ module CPU;
 	adder add4(.A(old_pc), .B(64'b100), .Cin(1'b0), .S(PCPlus4));
 	
 	//Control Unit
-	control_unit CU(instruction[31:21], Reg2Loc, ALUSrc, MemtoReg, RegWrite, MemRead, MemWrite, Branch, ALUOperation);
+	control_unit CU(instruction[31:21], Reg2Loc, ALUSrc, MemToReg, RegWrite, MemRead, MemWrite, Branch, ALUOperation);
 
 	//Reg2Loc Mux
 	mux2 Reg2LocMux(instruction[20:16], instruction[4:0], Reg2Loc, read_register_2);
 	
 	//Register Bank
-	register_bank bank(clk, read_register_1, read_register_2, instruction[4:0], MemtoRegMuxOutput, RegWrite, read_data_1, read_data_2);
+	register_bank bank(clk, instruction[9:5], read_register_2, instruction[4:0], MemtoRegMuxOutput, RegWrite, read_data_1, read_data_2);
 	
 	//Sign Extend
 	sign_extend SE(instruction, ExtendedData);
