@@ -21,6 +21,11 @@ module memory(clk, address, data_in, read, write, data_out);
 		memory[address]
 	} : 64'bz;
 	
+	integer i;
+	initial begin
+		for(i=0 ; i < 128 ; i = i + 1) memory[i] = i;
+	end
+	
 	always @(posedge clk) begin
 		if(write == 1'b1) begin
 			memory[address + 7] <= data_in[63:56];
