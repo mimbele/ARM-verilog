@@ -89,7 +89,7 @@ module CPU_Pipeline;
 	mux2 Reg2LocMux(ID_instruction[20:16], ID_instruction[4:0], ID_Reg2Loc, ID_read_register_2);
 	
 	//Register Bank
-	register_bank bank(clk, ID_instruction[9:5], ID_read_register_2, ID_instruction[4:0], MemtoRegMuxOutput, WB_RegWrite, ID_read_data_1, ID_read_data_2);
+	register_bank bank(clk, ID_instruction[9:5], ID_read_register_2, WB_instruction_4_0, MemtoRegMuxOutput, WB_RegWrite, ID_read_data_1, ID_read_data_2);
 	
 	//Sign Extend
 	sign_extend SE(ID_instruction, ID_ExtendedData);
