@@ -86,7 +86,7 @@ module CPU_Pipeline;
 	control_unit CU(ID_instruction[31:21], ID_Reg2Loc, ID_ALUSrc, ID_MemToReg, ID_RegWrite, ID_MemRead, ID_MemWrite, ID_Branch, ID_ALUOperation);
 
 	//Reg2Loc Mux
-	mux2 Reg2LocMux(ID_instruction[20:16], ID_instruction[4:0], ID_Reg2Loc, ID_read_register_2);
+	mux2 #(5) Reg2LocMux(ID_instruction[20:16], ID_instruction[4:0], ID_Reg2Loc, ID_read_register_2);
 	
 	//Register Bank
 	register_bank bank(clk, ID_instruction[9:5], ID_read_register_2, WB_instruction_4_0, MemtoRegMuxOutput, WB_RegWrite, ID_read_data_1, ID_read_data_2);
