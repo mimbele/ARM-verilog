@@ -47,7 +47,7 @@ module CPU;
 	control_unit CU(instruction[31:21], Reg2Loc, ALUSrc, MemToReg, RegWrite, MemRead, MemWrite, Branch, ALUOperation);
 
 	//Reg2Loc Mux
-	mux2 Reg2LocMux(instruction[20:16], instruction[4:0], Reg2Loc, read_register_2);
+	mux2 #(5) Reg2LocMux(instruction[20:16], instruction[4:0], Reg2Loc, read_register_2);
 	
 	//Register Bank
 	register_bank bank(clk, instruction[9:5], read_register_2, instruction[4:0], MemtoRegMuxOutput, RegWrite, read_data_1, read_data_2);
