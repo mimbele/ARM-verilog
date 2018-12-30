@@ -2,7 +2,7 @@ module clock(clk);
 	output reg clk;
 	always begin
 		clk = 1'b1;
-		#100 clk = 1'b0;
-		#100;
+		#800 clk = 1'b0;
+		#800;
 	end
 endmodule
